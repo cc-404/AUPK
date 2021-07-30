@@ -351,8 +351,8 @@ namespace art
        
       //   const DexFile *dexFile = artMethod->GetDexFile();
       //   char feature[] = "Execute";
-      //   Qazwsx::dumpDexFile(dexFile, feature);
-      //   Qazwsx::dumpClassName(dexFile, feature);
+      //   Qazwsx::downloadDexFile(dexFile, feature);
+      //   Qazwsx::downloadClassName(dexFile, feature);
       // }
 
       DCHECK(!shadow_frame.GetMethod()->IsAbstract());

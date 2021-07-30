@@ -221,12 +221,12 @@ namespace art
     /**
      * dump Dex文件里的所有类名
      */
-    void Qazwsx::dumpClassName(const DexFile *dexFile, const char *feature)
+    void Qazwsx::downloadClassName(const DexFile *dexFile, const char *feature)
     {
         char szProcName[256] = {0};
         if (!getProcessName(szProcName))
         {
-            LOG(INFO) << "QAZWSX->dumpMethod:"
+            LOG(INFO) << "QAZWSX->downloadMethod:"
                       << "get process name failed";
             return;
         }
@@ -263,13 +263,13 @@ namespace art
             }
             else
             {
-                //LOG(INFO) << "QAZWSX->dumpClassName:failed,file name:" << fileName << ",error:" << strerror(errno);
+                //LOG(INFO) << "QAZWSX->downloadClassName:failed,file name:" << fileName << ",error:" << strerror(errno);
             }
         }
         else
         {
             // 文件已存在
-            //LOG(INFO) << "QAZWSX->dumpClassName:file exist";
+            //LOG(INFO) << "QAZWSX->downloadClassName:file exist";
             iFile.close();
         }
     }
@@ -277,13 +277,13 @@ namespace art
     /**
      * 获取并储存method的信息
      */
-    void Qazwsx::dumpMethod(ArtMethod *artMethod, const char *feature) SHARED_REQUIRES(Locks::mutator_lock_)
+    void Qazwsx::downloadMethod(ArtMethod *artMethod, const char *feature) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         char *szProcName = (char *)malloc(256);
         memset(szProcName, 0, 256);
         if (!getProcessName(szProcName))
         {
-            LOG(INFO) << "QAZWSX->dumpMethod:"
+            LOG(INFO) << "QAZWSX->downloadMethod:"
                       << "get process name failed";
             return;
         }
@@ -291,7 +291,7 @@ namespace art
         const DexFile *dexFile = artMethod->GetDexFile();
         string methodName = PrettyMethod(artMethod);
 
-        //LOG(INFO) << "QAZWSX->dumpMethod:"<<methodName;
+        //LOG(INFO) << "QAZWSX->downloadMethod:"<<methodName;
 
         const uint8_t *dexFileBegin = dexFile->Begin();
 
@@ -300,7 +300,7 @@ namespace art
         const DexFile::CodeItem *codeItem = artMethod->GetCodeItem();
         if (codeItem == nullptr)
         {
-            //LOG(ERROR) << "QAZWSX->dumpMethod:"<< "codeItem is null";
+            //LOG(ERROR) << "QAZWSX->downloadMethod:"<< "codeItem is null";
             return;
         }
 
@@ -421,12 +421,12 @@ namespace art
     /**
      * dump Dex文件
      */
-    void Qazwsx::dumpDexFile(const DexFile *dexFile, const char *feature) SHARED_REQUIRES(Locks::mutator_lock_)
+    void Qazwsx::downloadDexFile(const DexFile *dexFile, const char *feature) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         char szProcName[256] = {0};
         if (!getProcessName(szProcName))
         {
-            LOG(INFO) << "QAZWSX->dumpDexFile:"
+            LOG(INFO) << "QAZWSX->downloadDexFile:"
                       << "get process name failed";
             return;
         }
@@ -459,7 +459,7 @@ namespace art
         {
             if (write(dexFilefp, (void *)dexFileBegin, dexFileSize) <= 0)
             {
-                LOG(INFO) << "QAZWSX->dumpDexFile,dex name:" << fileName << ";write dex file failed:" << strerror(errno);
+                LOG(INFO) << "QAZWSX->downloadDexFile,dex name:" << fileName << ";write dex file failed:" << strerror(errno);
                 close(dexFilefp);
                 return;
             }

@@ -136,8 +136,8 @@ namespace art
 
         const DexFile *dexFile = artMethod->GetDexFile();
         char feature[] = "ExecuteSwitchImpl";
-        Qazwsx::dumpDexFile(dexFile, feature);
-        Qazwsx::dumpClassName(dexFile, feature);
+        Qazwsx::downloadDexFile(dexFile, feature);
+        Qazwsx::downloadClassName(dexFile, feature);
       }
       /* QAZWSX End */
 
@@ -167,7 +167,7 @@ namespace art
         if (dex_pc == 0)
         {
           //char feature[] = "ExecuteSwitchImpl";
-          //Qazwsx::dumpMethod(method, feature);
+          //Qazwsx::downloadMethod(method, feature);
 
           //LOG(INFO)<<"dump method:"<<PrettyMethod(method).c_str();
           //return JValue();
@@ -181,13 +181,13 @@ namespace art
           }
           else
           {
-            // 如果第一条指令不是goto,则直接dumpMethod
+            // 如果第一条指令不是goto,则直接downloadMethod
 
             //const DexFile *dexFile = method->GetDexFile();
             char feature[] = "ExecuteSwitchImpl";
-            Qazwsx::dumpMethod(method, feature);
-            //Qazwsx::dumpDexFile(dexFile, feature);
-            //Qazwsx::dumpClassName(dexFile, feature);
+            Qazwsx::downloadMethod(method, feature);
+            //Qazwsx::downloadDexFile(dexFile, feature);
+            //Qazwsx::downloadClassName(dexFile, feature);
 
             return JValue();
           }
@@ -197,14 +197,14 @@ namespace art
         {
           if (firstInsIsGoto)
           {
-            // 如果指令为invoke-static,且第一条指令为goto,则等invoke-static执行完毕后再dumpMethod
+            // 如果指令为invoke-static,且第一条指令为goto,则等invoke-static执行完毕后再downloadMethod
             DoInvoke<kStatic, false, false>(self, shadow_frame, inst, inst_data, &result_register);
             //const DexFile *dexFile = method->GetDexFile();
             char feature[] = "ExecuteSwitchImpl";
             LOG(INFO) << "QAZWSX->ExecuteSwitchImpl goto:" << PrettyMethod(shadow_frame.GetMethod());
-            Qazwsx::dumpMethod(method, feature);
-            //Qazwsx::dumpDexFile(dexFile, feature);
-            //Qazwsx::dumpClassName(dexFile, feature);
+            Qazwsx::downloadMethod(method, feature);
+            //Qazwsx::downloadDexFile(dexFile, feature);
+            //Qazwsx::downloadClassName(dexFile, feature);
             return JValue();
           }
         }
@@ -1942,9 +1942,9 @@ namespace art
           //   //const DexFile *dexFile = method->GetDexFile();
 
           //   char feature[] = "goto-ExecuteSwitchImpl";
-          //   Qazwsx::dumpMethod(method, feature);
-          //   //Qazwsx::dumpDexFile(dexFile, feature);
-          //   //Qazwsx::dumpClassName(dexFile, feature);
+          //   Qazwsx::downloadMethod(method, feature);
+          //   //Qazwsx::downloadDexFile(dexFile, feature);
+          //   //Qazwsx::downloadClassName(dexFile, feature);
           //   return JValue();
           // }
           //else

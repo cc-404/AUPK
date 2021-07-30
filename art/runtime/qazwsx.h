@@ -30,9 +30,9 @@ namespace art
         static bool getProcessName(char *szProcName);
 
         static void mapToFile();
-        static void dumpClassName(const DexFile *dexFile, const char *feature);
-        static void dumpMethod(ArtMethod *artMethod, const char *feature);
-        static void dumpDexFile(const DexFile *dexFile, const char *feature);
+        static void downloadClassName(const DexFile *dexFile, const char *feature);
+        static void downloadMethod(ArtMethod *artMethod, const char *feature);
+        static void downloadDexFile(const DexFile *dexFile, const char *feature);
 
         static void setThread(Thread *thread);
         static void setMethod(ArtMethod *method);
