@@ -11,7 +11,7 @@
 
 namespace art
 {
-	extern "C" ArtMethod *jMethodToArtMethod(JNIEnv *env, jobject jMethod)
+	extern "C" ArtMethod *javaMethod2ArtMethod(JNIEnv *env, jobject jMethod)
 	{
 		ScopedFastNativeObjectAccess soa(env);
 		ArtMethod *method = ArtMethod::FromReflectedMethod(soa, jMethod);

@@ -25,11 +25,11 @@ namespace art
        
         static void qazwsxFunnyInvoke(ArtMethod *artMethod);
 
-        static uint8_t *getCodeItemEnd(const uint8_t **pData);
-        static char *base64Encode(char *str, long str_len, long *outlen);
-        static bool getProcessName(char *szProcName);
+        static uint8_t *mGetCodeItemEnd(const uint8_t **pData);
+        static char *encodeToBase64(char *str, long str_len, long *outlen);
+        static bool getCurrentProcessName(char *szProcName);
 
-        static void mapToFile();
+        static void map2File();
         static void downloadClassName(const DexFile *dexFile, const char *feature);
         static void downloadMethod(ArtMethod *artMethod, const char *feature);
         static void downloadDexFile(const DexFile *dexFile, const char *feature);

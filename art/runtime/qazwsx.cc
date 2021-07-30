@@ -54,7 +54,7 @@ using namespace std;
 
 namespace art
 {
-    extern "C" ArtMethod *jMethodToArtMethod(JNIEnv *env, jobject jMethod);
+    extern "C" ArtMethod *javaMethod2ArtMethod(JNIEnv *env, jobject jMethod);
     map<string, string> methodMap;
     list<const DexFile *> dexFiles;
 
@@ -88,7 +88,7 @@ namespace art
         artMethod->Invoke(self, args.data(), args_size, &result, artMethod->GetShorty());
     }
 
-    uint8_t *Qazwsx::getCodeItemEnd(const uint8_t **pData)
+    uint8_t *Qazwsx::mGetCodeItemEnd(const uint8_t **pData)
     {
         uint32_t num_of_list = DecodeUnsignedLeb128(pData);
         for (; num_of_list > 0; num_of_list--)
@@ -116,7 +116,7 @@ namespace art
     /**
      * base64编码
      */
-    char *Qazwsx::base64Encode(char *str, long str_len, long *outlen)
+    char *Qazwsx::encodeToBase64(char *str, long str_len, long *outlen)
     {
         long len;
         char *res;
@@ -159,7 +159,7 @@ namespace art
     /**
      * 获取当前进程名
      */
-    bool Qazwsx::getProcessName(char *szProcName)
+    bool Qazwsx::getCurrentProcessName(char *szProcName)
     {
         int fcmdline = -1;
         char szCmdline[64] = {0};
@@ -171,13 +171,13 @@ namespace art
         {
             if (read(fcmdline, szProcName, 256) <= 0)
             {
-                LOG(INFO) << "QAZWSX->art_method.cc:getProcessName,read process name failed:" << strerror(errno);
+                LOG(INFO) << "QAZWSX->art_method.cc:getCurrentProcessName,read process name failed:" << strerror(errno);
                 result = false;
             }
         }
         if (!szProcName[0])
         {
-            LOG(INFO) << "QAZWSX->art_method.cc:getProcessName,process name is null:" << strerror(errno);
+            LOG(INFO) << "QAZWSX->art_method.cc:getCurrentProcessName,process name is null:" << strerror(errno);
             result = false;
         }
         close(fcmdline);
@@ -187,7 +187,7 @@ namespace art
     /**
      * 将MethodInfo信息从内存映射到文件 
      */
-    void Qazwsx::mapToFile()
+    void Qazwsx::map2File()
     {
         LOG(INFO) << "QAZWSX->method list file count:" << methodMap.size();
         for (map<string, string>::iterator iter = methodMap.begin(); iter != methodMap.end(); iter++)
@@ -224,7 +224,7 @@ namespace art
     void Qazwsx::downloadClassName(const DexFile *dexFile, const char *feature)
     {
         char szProcName[256] = {0};
-        if (!getProcessName(szProcName))
+        if (!getCurrentProcessName(szProcName))
         {
             LOG(INFO) << "QAZWSX->downloadMethod:"
                       << "get process name failed";
@@ -281,7 +281,7 @@ namespace art
     {
         char *szProcName = (char *)malloc(256);
         memset(szProcName, 0, 256);
-        if (!getProcessName(szProcName))
+        if (!getCurrentProcessName(szProcName))
         {
             LOG(INFO) << "QAZWSX->downloadMethod:"
                       << "get process name failed";
@@ -321,7 +321,7 @@ namespace art
         if (codeItem->tries_size_ > 0)
         {
             const uint8_t *handlerData = (const uint8_t *)(DexFile::GetTryItems(*codeItem, codeItem->tries_size_));
-            uint8_t *tail = getCodeItemEnd(&handlerData);
+            uint8_t *tail = mGetCodeItemEnd(&handlerData);
             codeItemLength = (int)(tail - item);
         }
         else
@@ -331,7 +331,7 @@ namespace art
 
         int offset = (int)(item - dexFileBegin);
         long outlen = 0;
-        char *base64Code = base64Encode((char *)item, (long)codeItemLength, &outlen);
+        char *base64Code = encodeToBase64((char *)item, (long)codeItemLength, &outlen);
 
         string *methodInfo = nullptr;
         bool isNeedDelete = false;
@@ -424,7 +424,7 @@ namespace art
     void Qazwsx::downloadDexFile(const DexFile *dexFile, const char *feature) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         char szProcName[256] = {0};
-        if (!getProcessName(szProcName))
+        if (!getCurrentProcessName(szProcName))
         {
             LOG(INFO) << "QAZWSX->downloadDexFile:"
                       << "get process name failed";
@@ -518,7 +518,7 @@ namespace art
         if (jMethod != nullptr)
         {
             Thread *self = Thread::Current();
-            ArtMethod *artMethod = jMethodToArtMethod(env, jMethod);
+            ArtMethod *artMethod = javaMethod2ArtMethod(env, jMethod);
             Qazwsx::setThread(self);
             Qazwsx::setMethod(artMethod);
             Qazwsx::qazwsxFunnyInvoke(artMethod);
@@ -526,17 +526,17 @@ namespace art
         return;
     }
 
-    static void Qazwsx_mapToFile(JNIEnv *env, jclass)
+    static void Qazwsx_map2File(JNIEnv *env, jclass)
     {
         if (env)
         {
         }
-        Qazwsx::mapToFile();
+        Qazwsx::map2File();
     }
 
     static JNINativeMethod gMethods[] = {
         NATIVE_METHOD(Qazwsx, native_funnyInvoke, "(Ljava/lang/Object;)V"),
-        NATIVE_METHOD(Qazwsx, mapToFile, "()V"),
+        NATIVE_METHOD(Qazwsx, map2File, "()V"),
     };
 
     // 注册native函数,须在runtime.cc中调用

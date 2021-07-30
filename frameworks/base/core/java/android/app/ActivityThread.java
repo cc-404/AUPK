@@ -2703,7 +2703,7 @@ public final class ActivityThread {
 
         String packageName=r.packageInfo.getPackageName();
         Log.i("QAZWSX", "ActivityThread:performLaunchActivity,this packageName:" +packageName);
-        String config=Qazwsx.readFileString("data/local/tmp/qazwsx.config");
+        String config=Qazwsx.readConfig("data/local/tmp/qazwsx.config");
         
         if(config!=null)
         {

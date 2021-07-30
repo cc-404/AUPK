@@ -27,18 +27,18 @@ import java.util.ArrayList;
 
 public class Qazwsx
 {
-    class FileInfo
+    class FileInformation
     {
         public String fileName;
-        public List<ClassInfo> classList=new ArrayList<>();
+        public List<ClassInformation> classList=new ArrayList<>();
     }
-    class ClassInfo
+    class ClassInformation
     {
         public String className;
         public Map<String,Object> methodMap=new HashMap<String,Object>();
     }
 
-    public static Object getFieldOjbect(String class_name, Object obj, String filedName)
+    public static Object mGetDeclaredFieldObject(String class_name, Object obj, String filedName)
     {
         try
         {
@@ -63,17 +63,17 @@ public class Qazwsx
             Method method = class_ActivityThread.getMethod("currentActivityThread", new Class[]{});
             Object currentActivityThread = method.invoke(null, new Object[]{});
 
-            Object mBoundApplication = getFieldOjbect(
+            Object mBoundApplication = mGetDeclaredFieldObject(
                     "android.app.ActivityThread",
                     currentActivityThread,
                     "mBoundApplication"
             );
-            Object loadedApkInfo = getFieldOjbect(
+            Object loadedApkInfo = mGetDeclaredFieldObject(
                     "android.app.ActivityThread$AppBindData",
                     mBoundApplication,
                     "info"
             );
-            Application mApplication = (Application) getFieldOjbect(
+            Application mApplication = (Application) mGetDeclaredFieldObject(
                     "android.app.LoadedApk",
                     loadedApkInfo,
                     "mApplication"
@@ -142,7 +142,7 @@ public class Qazwsx
      * 获取指定类里所有的方法
      * 返回类的方法数量
      */
-    public static int loadAllMethodsWithClass(Class klass,ClassInfo classInfo)
+    public static int mLoadAllMethodsByClass(Class klass,ClassInformation classInfo)
     {
         //Log.i("QAZWSX", "ActivityThread:loadAllMethods from class:" + className);
         int count=0;
@@ -181,7 +181,7 @@ public class Qazwsx
 
   
        
-    private static String formatTime(long ms) {
+    private static String timeFormat(long ms) {
         int ss = 1000;
         int mi = ss * 60;
         int hh = mi * 60;
@@ -217,7 +217,7 @@ public class Qazwsx
                         try
                         {
                             Thread.sleep(1000);
-                            String strConfig=readFileString(configPath);
+                            String strConfig=readConfig(configPath);
                             if(strConfig!=null)
                             {
                                 Log.e("QAZWSX", "Found configration:"+strConfig);
@@ -247,7 +247,7 @@ public class Qazwsx
                                 
                                 Log.e("QAZWSX", "Qazwsx run over");
                                 long endMillis = System.currentTimeMillis();
-                                String strTime=formatTime(endMillis-startMillis);
+                                String strTime=timeFormat(endMillis-startMillis);
                                 Log.e("QAZWSX","Time "+strTime);
                                 File file = new File(configPath);
                                 if(file.exists() && file.isFile())
@@ -282,7 +282,7 @@ public class Qazwsx
     /**
      * 启动主动调用线程
      */
-    public void unpackWithClassLoader(int second)
+    public void doUnpackByClassLoader(int second)
     {
         new Thread(new Runnable()
         {
@@ -307,7 +307,7 @@ public class Qazwsx
     
     private boolean qazwsxThreadClasses(String packageName,String dexClassFileName)
     {    
-        List<FileInfo> fileList=new ArrayList<>();
+        List<FileInformation> fileList=new ArrayList<>();
         try
         {   
             //Map<MethodInfo,Object> methodMap=new HashMap<>();
@@ -337,21 +337,21 @@ public class Qazwsx
                 dexClassPaths.add(fileName);
             }
 
-            Method method_mapToFile = getMethod(getClassLoader(),"android.app.Qazwsx","mapToFile");
+            Method method_map2File = getMethod(getClassLoader(),"android.app.Qazwsx","map2File");
             Log.i("QAZWSX","Found "+dexClassPaths.size()+" _class.json files");
             for (int i = 0; i <dexClassPaths.size() ; i++)
             {
                 String dexClassPath=dexClassPaths.get(i);
                 
                 // 添加数据
-                FileInfo fileInfo=new FileInfo();
+                FileInformation fileInfo=new FileInformation();
                 fileInfo.fileName=dexClassPath;
                 fileList.add(fileInfo);
 
                 //Log.i("QAZWSX","dex class path:"+dexClassPath);
 
                 File classesFile = new File(dexClassPath);
-                String strDexClass = readFileString(dexClassPath);
+                String strDexClass = readConfig(dexClassPath);
                 if(strDexClass==null)
                 {
                     continue;
@@ -377,12 +377,12 @@ public class Qazwsx
                         {
                             continue;
                         }
-                        ClassInfo classInfo=new ClassInfo();
+                        ClassInformation classInfo=new ClassInformation();
                         classInfo.className=className;
                         fileInfo.classList.add(classInfo);
 
                         Class klass=getClassLoader().loadClass(className);
-                        int count=loadAllMethodsWithClass(klass,classInfo);
+                        int count=mLoadAllMethodsByClass(klass,classInfo);
 
                         Log.i("QAZWSX","Load file["+(i+1)+"/"+dexClassPaths.size()+"]:"+classesFile.getName()+",class["+(j+1)+"/"+data.length()+"]:"+className+",method count:"+count); 
                     } 
@@ -398,7 +398,7 @@ public class Qazwsx
             for(int x=0;x<fileList.size();x++)
             {
                 String fileName=fileList.get(x).fileName;
-                List<ClassInfo> classList=fileList.get(x).classList;
+                List<ClassInformation> classList=fileList.get(x).classList;
 
                 for(int y=0;y<classList.size();y++)
                 {
@@ -424,7 +424,7 @@ public class Qazwsx
                         }              
                     }
                 }
-                method_mapToFile.invoke(null); 
+                method_map2File.invoke(null); 
             }
             return true;             
         }
@@ -439,7 +439,7 @@ public class Qazwsx
     /**
      * 读取配置文件
      */
-    public static String readFileString(String fileName)
+    public static String readConfig(String fileName)
     {
         FileInputStream fis=null;
         try
@@ -456,13 +456,13 @@ public class Qazwsx
         catch (Exception e)
         {
             //e.printStackTrace();
-            //Log.e("QAZWSX", "ActivityThread:readFileString,read config file failed:" +e.getMessage()+";fileName:"+fileName);
+            //Log.e("QAZWSX", "ActivityThread:readConfig,read config file failed:" +e.getMessage()+";fileName:"+fileName);
         }
        return null;
     }
 
     private static native void native_funnyInvoke(Object method);
-    private static native void mapToFile();
+    private static native void map2File();
 }
 
 
