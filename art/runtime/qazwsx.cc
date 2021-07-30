@@ -1,5 +1,5 @@
 
-#include "aupk.h"
+#include "qazwsx.h"
 #include <sys/stat.h>
 #include "runtime.h"
 #include <android/log.h>
@@ -58,14 +58,14 @@ namespace art
     map<string, string> methodMap;
     list<const DexFile *> dexFiles;
 
-    Thread *Aupk::aupkThread = nullptr;
-    ArtMethod *Aupk::aupkArtMethod = nullptr;
+    Thread *Qazwsx::qazwsxThread = nullptr;
+    ArtMethod *Qazwsx::qazwsxArtMethod = nullptr;
 
     /**
      * 供 dalvik_system_DexFile.cc->DexFile_fakeInvoke调用
      * 构造主动调用的参数,并进行调用
      */
-    void Aupk::aupkFakeInvoke(ArtMethod *artMethod) SHARED_REQUIRES(Locks::mutator_lock_)
+    void Qazwsx::qazwsxFakeInvoke(ArtMethod *artMethod) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         if (artMethod->IsAbstract() || artMethod->IsNative() || (!artMethod->IsInvokable()) || artMethod->IsProxyMethod())
         {
@@ -88,7 +88,7 @@ namespace art
         artMethod->Invoke(self, args.data(), args_size, &result, artMethod->GetShorty());
     }
 
-    uint8_t *Aupk::getCodeItemEnd(const uint8_t **pData)
+    uint8_t *Qazwsx::getCodeItemEnd(const uint8_t **pData)
     {
         uint32_t num_of_list = DecodeUnsignedLeb128(pData);
         for (; num_of_list > 0; num_of_list--)
@@ -116,7 +116,7 @@ namespace art
     /**
      * base64编码
      */
-    char *Aupk::base64Encode(char *str, long str_len, long *outlen)
+    char *Qazwsx::base64Encode(char *str, long str_len, long *outlen)
     {
         long len;
         char *res;
@@ -159,7 +159,7 @@ namespace art
     /**
      * 获取当前进程名
      */
-    bool Aupk::getProcessName(char *szProcName)
+    bool Qazwsx::getProcessName(char *szProcName)
     {
         int fcmdline = -1;
         char szCmdline[64] = {0};
@@ -171,13 +171,13 @@ namespace art
         {
             if (read(fcmdline, szProcName, 256) <= 0)
             {
-                LOG(INFO) << "AUPK->art_method.cc:getProcessName,read process name failed:" << strerror(errno);
+                LOG(INFO) << "QAZWSX->art_method.cc:getProcessName,read process name failed:" << strerror(errno);
                 result = false;
             }
         }
         if (!szProcName[0])
         {
-            LOG(INFO) << "AUPK->art_method.cc:getProcessName,process name is null:" << strerror(errno);
+            LOG(INFO) << "QAZWSX->art_method.cc:getProcessName,process name is null:" << strerror(errno);
             result = false;
         }
         close(fcmdline);
@@ -187,9 +187,9 @@ namespace art
     /**
      * 将MethodInfo信息从内存映射到文件 
      */
-    void Aupk::mapToFile()
+    void Qazwsx::mapToFile()
     {
-        LOG(INFO) << "AUPK->method list file count:" << methodMap.size();
+        LOG(INFO) << "QAZWSX->method list file count:" << methodMap.size();
         for (map<string, string>::iterator iter = methodMap.begin(); iter != methodMap.end(); iter++)
         {
             fstream file;
@@ -205,7 +205,7 @@ namespace art
             if (file.is_open())
             {
                 remove(fileName);
-                LOG(INFO) << "AUPK->remove fileName:" << fileName;
+                LOG(INFO) << "QAZWSX->remove fileName:" << fileName;
             }
             file.close();
 
@@ -213,7 +213,7 @@ namespace art
             file.open(fileName, ios::out);
             file << methodInfo;
             file.close();
-            LOG(INFO) << "AUPK->dump method information success:" << fileName;
+            LOG(INFO) << "QAZWSX->dump method information success:" << fileName;
         }
         methodMap.clear();
     }
@@ -221,18 +221,18 @@ namespace art
     /**
      * dump Dex文件里的所有类名
      */
-    void Aupk::dumpClassName(const DexFile *dexFile, const char *feature)
+    void Qazwsx::dumpClassName(const DexFile *dexFile, const char *feature)
     {
         char szProcName[256] = {0};
         if (!getProcessName(szProcName))
         {
-            LOG(INFO) << "AUPK->dumpMethod:"
+            LOG(INFO) << "QAZWSX->dumpMethod:"
                       << "get process name failed";
             return;
         }
         // 创建目录
         char filePath[256] = {0};
-        sprintf(filePath, "/data/data/%s/aupk", szProcName);
+        sprintf(filePath, "/data/data/%s/qazwsx", szProcName);
         mkdir(filePath, 0777);
 
         // 构造文件名
@@ -259,17 +259,17 @@ namespace art
             {
                 oFile << root;
                 oFile.close();
-                LOG(INFO) << "AUPK->dump class name:success:" << fileName;
+                LOG(INFO) << "QAZWSX->dump class name:success:" << fileName;
             }
             else
             {
-                //LOG(INFO) << "AUPK->dumpClassName:failed,file name:" << fileName << ",error:" << strerror(errno);
+                //LOG(INFO) << "QAZWSX->dumpClassName:failed,file name:" << fileName << ",error:" << strerror(errno);
             }
         }
         else
         {
             // 文件已存在
-            //LOG(INFO) << "AUPK->dumpClassName:file exist";
+            //LOG(INFO) << "QAZWSX->dumpClassName:file exist";
             iFile.close();
         }
     }
@@ -277,13 +277,13 @@ namespace art
     /**
      * 获取并储存method的信息
      */
-    void Aupk::dumpMethod(ArtMethod *artMethod, const char *feature) SHARED_REQUIRES(Locks::mutator_lock_)
+    void Qazwsx::dumpMethod(ArtMethod *artMethod, const char *feature) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         char *szProcName = (char *)malloc(256);
         memset(szProcName, 0, 256);
         if (!getProcessName(szProcName))
         {
-            LOG(INFO) << "AUPK->dumpMethod:"
+            LOG(INFO) << "QAZWSX->dumpMethod:"
                       << "get process name failed";
             return;
         }
@@ -291,7 +291,7 @@ namespace art
         const DexFile *dexFile = artMethod->GetDexFile();
         string methodName = PrettyMethod(artMethod);
 
-        //LOG(INFO) << "AUPK->dumpMethod:"<<methodName;
+        //LOG(INFO) << "QAZWSX->dumpMethod:"<<methodName;
 
         const uint8_t *dexFileBegin = dexFile->Begin();
 
@@ -300,14 +300,14 @@ namespace art
         const DexFile::CodeItem *codeItem = artMethod->GetCodeItem();
         if (codeItem == nullptr)
         {
-            //LOG(ERROR) << "AUPK->dumpMethod:"<< "codeItem is null";
+            //LOG(ERROR) << "QAZWSX->dumpMethod:"<< "codeItem is null";
             return;
         }
 
         // 创建目录
         char *filePath = (char *)malloc(256);
         memset(filePath, 0, 256);
-        sprintf(filePath, "/data/data/%s/aupk", szProcName);
+        sprintf(filePath, "/data/data/%s/qazwsx", szProcName);
         mkdir(filePath, 0777);
 
         // 构造文件名
@@ -421,23 +421,23 @@ namespace art
     /**
      * dump Dex文件
      */
-    void Aupk::dumpDexFile(const DexFile *dexFile, const char *feature) SHARED_REQUIRES(Locks::mutator_lock_)
+    void Qazwsx::dumpDexFile(const DexFile *dexFile, const char *feature) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         char szProcName[256] = {0};
         if (!getProcessName(szProcName))
         {
-            LOG(INFO) << "AUPK->dumpDexFile:"
+            LOG(INFO) << "QAZWSX->dumpDexFile:"
                       << "get process name failed";
             return;
         }
 
-        // make dir in the sdcard for aupk
+        // make dir in the sdcard for qazwsx
         const uint8_t *dexFileBegin = dexFile->Begin();
         int dexFileSize = (int)dexFile->Size();
 
         // 创建目录
         char filePath[256] = {0};
-        sprintf(filePath, "/data/data/%s/aupk", szProcName);
+        sprintf(filePath, "/data/data/%s/qazwsx", szProcName);
         mkdir(filePath, 0777);
 
         // 构造文件名
@@ -459,13 +459,13 @@ namespace art
         {
             if (write(dexFilefp, (void *)dexFileBegin, dexFileSize) <= 0)
             {
-                LOG(INFO) << "AUPK->dumpDexFile,dex name:" << fileName << ";write dex file failed:" << strerror(errno);
+                LOG(INFO) << "QAZWSX->dumpDexFile,dex name:" << fileName << ";write dex file failed:" << strerror(errno);
                 close(dexFilefp);
                 return;
             }
             fsync(dexFilefp);
             close(dexFilefp);
-            LOG(INFO) << "AUPK->dump dex file success:" << fileName;
+            LOG(INFO) << "QAZWSX->dump dex file success:" << fileName;
         }
     }
 
@@ -473,33 +473,33 @@ namespace art
      * 存储当前线程对象
      * 一般来讲,只有在主动调用线程里会调用这个函数
      */
-    void Aupk::setThread(Thread *thread)
+    void Qazwsx::setThread(Thread *thread)
     {
-        aupkThread = thread;
+        qazwsxThread = thread;
     }
 
     /**
      * 存储artMethod
      * 在主动调用时,存储正在调用的method
      */
-    void Aupk::setMethod(ArtMethod *method)
+    void Qazwsx::setMethod(ArtMethod *method)
     {
-        aupkArtMethod = method;
+        qazwsxArtMethod = method;
     }
 
     /**
      * 判断方法是否为主动调用 
-     * 根据存储的 aupkThread 和 aupkArtMethod 来判断是否为主动调用的函数
+     * 根据存储的 qazwsxThread 和 qazwsxArtMethod 来判断是否为主动调用的函数
      */
-    bool Aupk::isFakeInvoke(Thread *thread, ArtMethod *method) SHARED_REQUIRES(Locks::mutator_lock_)
+    bool Qazwsx::isFakeInvoke(Thread *thread, ArtMethod *method) SHARED_REQUIRES(Locks::mutator_lock_)
     {
-        if (aupkThread == nullptr || aupkArtMethod == nullptr || thread == nullptr || method == nullptr)
+        if (qazwsxThread == nullptr || qazwsxArtMethod == nullptr || thread == nullptr || method == nullptr)
         {
             return false;
         }
 
-        if ((thread->GetTid() == aupkThread->GetTid()) &&
-            strcmp(PrettyMethod(method).c_str(), PrettyMethod(aupkArtMethod).c_str()) == 0)         
+        if ((thread->GetTid() == qazwsxThread->GetTid()) &&
+            strcmp(PrettyMethod(method).c_str(), PrettyMethod(qazwsxArtMethod).c_str()) == 0)         
         {
             return true;
         }
@@ -510,7 +510,7 @@ namespace art
      * Native函数
      * 将java方法转为ArtMethod对象,并进行主动调用
      */
-    static void Aupk_native_fakeInvoke(JNIEnv *env, jclass, jobject jMethod) SHARED_REQUIRES(Locks::mutator_lock_)
+    static void Qazwsx_native_fakeInvoke(JNIEnv *env, jclass, jobject jMethod) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         if (env)
         {
@@ -519,30 +519,30 @@ namespace art
         {
             Thread *self = Thread::Current();
             ArtMethod *artMethod = jMethodToArtMethod(env, jMethod);
-            Aupk::setThread(self);
-            Aupk::setMethod(artMethod);
-            Aupk::aupkFakeInvoke(artMethod);
+            Qazwsx::setThread(self);
+            Qazwsx::setMethod(artMethod);
+            Qazwsx::qazwsxFakeInvoke(artMethod);
         }
         return;
     }
 
-    static void Aupk_mapToFile(JNIEnv *env, jclass)
+    static void Qazwsx_mapToFile(JNIEnv *env, jclass)
     {
         if (env)
         {
         }
-        Aupk::mapToFile();
+        Qazwsx::mapToFile();
     }
 
     static JNINativeMethod gMethods[] = {
-        NATIVE_METHOD(Aupk, native_fakeInvoke, "(Ljava/lang/Object;)V"),
-        NATIVE_METHOD(Aupk, mapToFile, "()V"),
+        NATIVE_METHOD(Qazwsx, native_fakeInvoke, "(Ljava/lang/Object;)V"),
+        NATIVE_METHOD(Qazwsx, mapToFile, "()V"),
     };
 
     // 注册native函数,须在runtime.cc中调用
-    void Aupk::register_android_app_Aupk(JNIEnv *env)
+    void Qazwsx::register_android_app_Qazwsx(JNIEnv *env)
     {
-        REGISTER_NATIVE_METHODS("android/app/Aupk");
+        REGISTER_NATIVE_METHODS("android/app/Qazwsx");
     }
 
 }

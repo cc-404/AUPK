@@ -1,6 +1,6 @@
 
-#ifndef ART_RUNTIME_AUPK_H_
-#define ART_RUNTIME_AUPK_H_
+#ifndef ART_RUNTIME_QAZWSX_H_
+#define ART_RUNTIME_QAZWSX_H_
 
 #include "art_method.h"
 #include "thread.h"
@@ -14,16 +14,16 @@ using namespace std;
 
 namespace art
 {
-    //void register_android_app_Aupk(JNIEnv *env);
+    //void register_android_app_Qazwsx(JNIEnv *env);
 
 
 
-    class Aupk
+    class Qazwsx
     {
     public:
 
        
-        static void aupkFakeInvoke(ArtMethod *artMethod);
+        static void qazwsxFakeInvoke(ArtMethod *artMethod);
 
         static uint8_t *getCodeItemEnd(const uint8_t **pData);
         static char *base64Encode(char *str, long str_len, long *outlen);
@@ -37,13 +37,13 @@ namespace art
         static void setThread(Thread *thread);
         static void setMethod(ArtMethod *method);
         static bool isFakeInvoke(Thread *thread, ArtMethod *method);
-        static void register_android_app_Aupk(JNIEnv *env);
+        static void register_android_app_Qazwsx(JNIEnv *env);
         
     private:
-        static Thread *aupkThread;
-        static ArtMethod *aupkArtMethod;
+        static Thread *qazwsxThread;
+        static ArtMethod *qazwsxArtMethod;
     };
 
 }
 
-#endif // ART_RUNTIME_AUPK_H_
+#endif // ART_RUNTIME_QAZWSX_H_

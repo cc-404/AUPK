@@ -29,7 +29,7 @@
 #include "jit/jit.h"
 #include "jit/jit_code_cache.h"
 
-/* AUPK Begin */
+/* QAZWSX Begin */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -42,8 +42,8 @@
 #include <android/log.h>
 #include <errno.h>
 #include <stdlib.h>
-#include "aupk.h"
-/* AUPK End */
+#include "qazwsx.h"
+/* QAZWSX End */
 
 namespace art
 {
@@ -303,11 +303,11 @@ namespace art
       return os;
     }
 
-    /* AUPK Begin */
+    /* QAZWSX Begin */
     // 改为使用 switch 型解释器
     //static constexpr InterpreterImplKind kInterpreterImplKind = kMterpImplKind;
     static constexpr InterpreterImplKind kInterpreterImplKind = kSwitchImplKind;
-    /* AUPK End */
+    /* QAZWSX End */
 
 #if defined(__clang__)
     // Clang 3.4 fails to build the goto interpreter implementation.
@@ -344,15 +344,15 @@ namespace art
         bool stay_in_interpreter = false) SHARED_REQUIRES(Locks::mutator_lock_)
     {
       // ArtMethod *artMethod = shadow_frame.GetMethod();
-      // bool isFakeInvokeMethod = Aupk::isFakeInvoke(self, artMethod);
+      // bool isFakeInvokeMethod = Qazwsx::isFakeInvoke(self, artMethod);
       
       // if (!isFakeInvokeMethod && strstr(PrettyMethod(shadow_frame.GetMethod()).c_str(), "<clinit>") != nullptr)
       // {       
        
       //   const DexFile *dexFile = artMethod->GetDexFile();
       //   char feature[] = "Execute";
-      //   Aupk::dumpDexFile(dexFile, feature);
-      //   Aupk::dumpClassName(dexFile, feature);
+      //   Qazwsx::dumpDexFile(dexFile, feature);
+      //   Qazwsx::dumpClassName(dexFile, feature);
       // }
 
       DCHECK(!shadow_frame.GetMethod()->IsAbstract());
@@ -523,7 +523,7 @@ namespace art
                                     uint32_t *args, JValue *result,
                                     bool stay_in_interpreter)
     {
-      bool isFakeInvokeMethod = Aupk::isFakeInvoke(self, method);
+      bool isFakeInvokeMethod = Qazwsx::isFakeInvoke(self, method);
     
       DCHECK_EQ(self, Thread::Current());
 
@@ -571,7 +571,7 @@ namespace art
       if (!method->IsStatic())
       {
         CHECK(receiver != nullptr);
-        /* AUPK Begin */
+        /* QAZWSX Begin */
         if (isFakeInvokeMethod)
         {
           //LOG(INFO)<<"EnterInterpreterFromInvoke1";
@@ -581,7 +581,7 @@ namespace art
         {
           shadow_frame->SetVRegReference(cur_reg, receiver);
         }
-        /* AUPK End */
+        /* QAZWSX End */
         ++cur_reg;
       }
       uint32_t shorty_len = 0;
@@ -594,7 +594,7 @@ namespace art
         {
         case 'L':
         {
-          /* AUPK Begin */
+          /* QAZWSX Begin */
           if (isFakeInvokeMethod)
           {
             //LOG(INFO)<<"EnterInterpreterFromInvoke2";
@@ -605,7 +605,7 @@ namespace art
             Object *o = reinterpret_cast<StackReference<Object> *>(&args[arg_pos])->AsMirrorPtr();
             shadow_frame->SetVRegReference(cur_reg, o);
           }
-          /* AUPK End */
+          /* QAZWSX End */
           break;
         }
         case 'J':

@@ -140,9 +140,9 @@
 #include "verifier/method_verifier.h"
 #include "well_known_classes.h"
 
-/* AUPK Begin */
-#include "aupk.h"
-/* AUPK End */
+/* QAZWSX Begin */
+#include "qazwsx.h"
+/* QAZWSX End */
 namespace art {
 
 // If a signal isn't handled properly, enable a handler that attempts to dump the Java stack.
@@ -1392,9 +1392,9 @@ jobject Runtime::GetSystemClassLoader() const {
 }
 
 void Runtime::RegisterRuntimeNativeMethods(JNIEnv* env) {
-  /* AUPK Begin */
-  Aupk::register_android_app_Aupk(env);
-  /* AUPK End */
+  /* QAZWSX Begin */
+  Qazwsx::register_android_app_Qazwsx(env);
+  /* QAZWSX End */
   register_dalvik_system_DexFile(env);
   register_dalvik_system_VMDebug(env);
   register_dalvik_system_VMRuntime(env);

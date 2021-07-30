@@ -396,9 +396,9 @@ class ArtMethod FINAL {
     method_index_ = new_method_index;
   }
 
-  /* AUPK Begin */
+  /* QAZWSX Begin */
   uint32_t get_method_idx(){ return dex_method_index_; }
-  /* AUPK End */
+  /* QAZWSX End */
 
   static MemberOffset DexMethodIndexOffset() {
     return OFFSET_OF_OBJECT_MEMBER(ArtMethod, dex_method_index_);

@@ -40,7 +40,7 @@
 #include "scoped_thread_state_change.h"
 #include "well_known_classes.h"
 
-/* AUPK Begin */
+/* QAZWSX Begin */
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "runtime.h"
@@ -60,8 +60,8 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/syscall.h>
-#include "aupk.h"
-/* AUPK End */
+#include "qazwsx.h"
+/* QAZWSX End */
 namespace art
 {
 
@@ -303,9 +303,9 @@ namespace art
   void ArtMethod::Invoke(Thread *self, uint32_t *args, uint32_t args_size, JValue *result,
                          const char *shorty)
   {
-    /* AUPK Begin */
-    bool isFakeInvokeMethod = Aupk::isFakeInvoke(self, this);
-    /* AUPK End */
+    /* QAZWSX Begin */
+    bool isFakeInvokeMethod = Qazwsx::isFakeInvoke(self, this);
+    /* QAZWSX End */
 
     if (UNLIKELY(__builtin_frame_address(0) < self->GetStackEnd()))
     {
@@ -329,7 +329,7 @@ namespace art
     // Invocation by the interpreter, explicitly forcing interpretation over JIT to prevent
     // cycling around the various JIT/Interpreter methods that handle method invocation.
 
-    /* AUPK Begin */
+    /* QAZWSX Begin */
     // 当isFakeInvokeMethod==true时且不为native方法时,使其强制走解释器
     //if (UNLIKELY(!runtime->IsStarted() || Dbg::IsForcedInterpreterNeededForCalling(self, this)))
     // if (isFakeInvokeMethod)
@@ -343,7 +343,7 @@ namespace art
 
     if (UNLIKELY(!runtime->IsStarted() || Dbg::IsForcedInterpreterNeededForCalling(self, this)) || isFakeInvokeMethod)
     {
-      /* AUPK End */
+      /* QAZWSX End */
       if (IsStatic())
       {
         art::interpreter::EnterInterpreterFromInvoke(

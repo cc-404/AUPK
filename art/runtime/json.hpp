@@ -81,9 +81,9 @@ SOFTWARE.
 #include <cstdint> // uint8_t
 #include <string> // string
 
-// AUPK Begin
+// QAZWSX Begin
 #include <android/log.h>
-// AUPK End
+// QAZWSX End
 
 namespace nlohmann
 {
@@ -2713,11 +2713,11 @@ class exception : public std::exception
             return a + "/" + detail::escape(b);
         }) + ") ";
 #else
-        /* AUPK Begin */
+        /* QAZWSX Begin */
         if(leaf_element)
         {
         }
-        /* AUPK End */
+        /* QAZWSX End */
         return "";
 #endif
     }
@@ -13917,11 +13917,11 @@ class binary_writer
     */
     static std::size_t calc_bson_entry_header_size(const string_t& name, const BasicJsonType& j)
     {
-        /* AUPK Begin */
+        /* QAZWSX Begin */
         if(j)
         {          
         }
-        /* AUPK End */
+        /* QAZWSX End */
         const auto it = name.find(static_cast<typename string_t::value_type>(0));
         if (JSON_HEDLEY_UNLIKELY(it != BasicJsonType::string_t::npos))
         {

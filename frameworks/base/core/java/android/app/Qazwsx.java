@@ -25,7 +25,7 @@ import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Aupk
+public class Qazwsx
 {
     class FileInfo
     {
@@ -119,11 +119,11 @@ public class Aupk
     {
         try
         {
-            // 该方法为native方法,声明于Aupk.java,实现于dalvik_system_DexFile.cc 
+            // 该方法为native方法,声明于Qazwsx.java,实现于dalvik_system_DexFile.cc 
              // 用于对指定函数发起主动调用
             if(method_native_fakeInvoke==null)
             {
-                method_native_fakeInvoke=getMethod(getClassLoader(),"android.app.Aupk","native_fakeInvoke");
+                method_native_fakeInvoke=getMethod(getClassLoader(),"android.app.Qazwsx","native_fakeInvoke");
             }   
             if(method==null)
             {
@@ -144,7 +144,7 @@ public class Aupk
      */
     public static int loadAllMethodsWithClass(Class klass,ClassInfo classInfo)
     {
-        //Log.i("AUPK", "ActivityThread:loadAllMethods from class:" + className);
+        //Log.i("QAZWSX", "ActivityThread:loadAllMethods from class:" + className);
         int count=0;
         try
         {
@@ -202,7 +202,7 @@ public class Aupk
     }
 
     static Thread thread=null;
-    public synchronized void aupkThread()
+    public synchronized void qazwsxThread()
     {      
         if(thread==null)
         {
@@ -211,7 +211,7 @@ public class Aupk
                 @Override
                 public void run()
                 {
-                    String configPath="data/local/tmp/aupk.config";
+                    String configPath="data/local/tmp/qazwsx.config";
                     while(true)
                     {
                         try
@@ -220,46 +220,46 @@ public class Aupk
                             String strConfig=readFileString(configPath);
                             if(strConfig!=null)
                             {
-                                Log.e("AUPK", "Found configration:"+strConfig);
+                                Log.e("QAZWSX", "Found configration:"+strConfig);
                                 // 配置文件格式:
                                 // com.package.name [method_info.json]
-                                Log.e("AUPK", "Start aupk");
+                                Log.e("QAZWSX", "Start qazwsx");
                                 long startMillis = System.currentTimeMillis();
 
                                 strConfig=strConfig.replace("\n","");
                                 String[] configs = strConfig.split(" ");
                                 if(configs.length==1)
                                 {
-                                    Log.i("AUPK","package name:"+configs[0]);
-                                    aupkThreadClasses(configs[0],null);
+                                    Log.i("QAZWSX","package name:"+configs[0]);
+                                    qazwsxThreadClasses(configs[0],null);
                                 }
                                 else if(configs.length==2)
                                 {
-                                    Log.i("AUPK","package name:"+configs[0]);
-                                    Log.i("AUPK","method info name:"+configs[1]);
-                                    aupkThreadClasses(configs[0],configs[1]);
+                                    Log.i("QAZWSX","package name:"+configs[0]);
+                                    Log.i("QAZWSX","method info name:"+configs[1]);
+                                    qazwsxThreadClasses(configs[0],configs[1]);
                                 }          
                                 else
                                 {
-                                    Log.e("AUPK", "Invalid configuration file:"+configPath);
+                                    Log.e("QAZWSX", "Invalid configuration file:"+configPath);
                                     continue;
                                 }                
                                 
-                                Log.e("AUPK", "Aupk run over");
+                                Log.e("QAZWSX", "Qazwsx run over");
                                 long endMillis = System.currentTimeMillis();
                                 String strTime=formatTime(endMillis-startMillis);
-                                Log.e("AUPK","Time "+strTime);
+                                Log.e("QAZWSX","Time "+strTime);
                                 File file = new File(configPath);
                                 if(file.exists() && file.isFile())
                                 {
                                     // 删除配置文件
                                     if(!file.delete())
                                     {
-                                        Log.e("AUPK", "File:"+configPath+" delete failed");
+                                        Log.e("QAZWSX", "File:"+configPath+" delete failed");
                                         
                                     }
                                 }
-                                Log.e("AUPK", "Programe will kill the aupk thread");
+                                Log.e("QAZWSX", "Programe will kill the qazwsx thread");
                                 thread=null;
                                 break;
                             }
@@ -291,11 +291,11 @@ public class Aupk
             {
                 try
                 {
-                    Log.e("AUPK", "start sleep for "+second+" seconds)......");
+                    Log.e("QAZWSX", "start sleep for "+second+" seconds)......");
                     Thread.sleep(second* 1000);
-                    Log.e("AUPK", "sleep over and start aupkThread");
-                    aupkThread();
-                    Log.e("AUPK", "aupk run over");
+                    Log.e("QAZWSX", "sleep over and start qazwsxThread");
+                    qazwsxThread();
+                    Log.e("QAZWSX", "qazwsx run over");
                 }
                 catch(Exception e)
                 {
@@ -305,14 +305,14 @@ public class Aupk
         }).start();
     }
     
-    private boolean aupkThreadClasses(String packageName,String dexClassFileName)
+    private boolean qazwsxThreadClasses(String packageName,String dexClassFileName)
     {    
         List<FileInfo> fileList=new ArrayList<>();
         try
         {   
             //Map<MethodInfo,Object> methodMap=new HashMap<>();
             List<String> dexClassPaths=new ArrayList<>();   
-            String folder="data/data/"+packageName+"/aupk/";        
+            String folder="data/data/"+packageName+"/qazwsx/";        
             if(dexClassFileName==null)
             {
                 File file=new File(folder);
@@ -337,8 +337,8 @@ public class Aupk
                 dexClassPaths.add(fileName);
             }
 
-            Method method_mapToFile = getMethod(getClassLoader(),"android.app.Aupk","mapToFile");
-            Log.i("AUPK","Found "+dexClassPaths.size()+" _class.json files");
+            Method method_mapToFile = getMethod(getClassLoader(),"android.app.Qazwsx","mapToFile");
+            Log.i("QAZWSX","Found "+dexClassPaths.size()+" _class.json files");
             for (int i = 0; i <dexClassPaths.size() ; i++)
             {
                 String dexClassPath=dexClassPaths.get(i);
@@ -348,7 +348,7 @@ public class Aupk
                 fileInfo.fileName=dexClassPath;
                 fileList.add(fileInfo);
 
-                //Log.i("AUPK","dex class path:"+dexClassPath);
+                //Log.i("QAZWSX","dex class path:"+dexClassPath);
 
                 File classesFile = new File(dexClassPath);
                 String strDexClass = readFileString(dexClassPath);
@@ -360,11 +360,11 @@ public class Aupk
                 if(jsonDexClass.has("count"))
                 {
                     //int count = jsonDexClass.getInt("count");
-                    //Log.i("AUPK","load classes file:"+dexClassPath+",count:"+count);
+                    //Log.i("QAZWSX","load classes file:"+dexClassPath+",count:"+count);
                 }
 
                 JSONArray data = jsonDexClass.getJSONArray("data");  
-                //Log.i("AUPK","Load file["+(i+1)+"/"+dexClassPaths.size()+"]:"+classesFile.getName()+",count of class:"+data.length()); 
+                //Log.i("QAZWSX","Load file["+(i+1)+"/"+dexClassPaths.size()+"]:"+classesFile.getName()+",count of class:"+data.length()); 
 
                 for (int j = 0; j < data.length(); j++)
                 {
@@ -373,7 +373,7 @@ public class Aupk
                         // 去掉开头L和结尾分号,并将/换成.
                         // Lcom/fighter/sdk/report/abtest/ABTestConfig$1;   =>   com.fighter.sdk.report.abtest.ABTestConfig$1
                         String className =data.getString(j).substring(1,data.getString(j).length()-1).replace("/",".");
-                        if(className.equals("android.app.Aupk"))
+                        if(className.equals("android.app.Qazwsx"))
                         {
                             continue;
                         }
@@ -384,7 +384,7 @@ public class Aupk
                         Class klass=getClassLoader().loadClass(className);
                         int count=loadAllMethodsWithClass(klass,classInfo);
 
-                        Log.i("AUPK","Load file["+(i+1)+"/"+dexClassPaths.size()+"]:"+classesFile.getName()+",class["+(j+1)+"/"+data.length()+"]:"+className+",method count:"+count); 
+                        Log.i("QAZWSX","Load file["+(i+1)+"/"+dexClassPaths.size()+"]:"+classesFile.getName()+",class["+(j+1)+"/"+data.length()+"]:"+className+",method count:"+count); 
                     } 
                     catch (Error | Exception e) 
                     {
@@ -407,7 +407,7 @@ public class Aupk
 
                     String log="File["+(x+1)+"/"+fileList.size()+"]:"+fileName+",";
                     log+="Class["+(y+1)+"/"+classList.size()+"]:"+className+",";
-                    Log.i("AUPK",log);
+                    Log.i("QAZWSX",log);
 
                     for(Map.Entry<String,Object> entry :methodMap.entrySet())
                     {
@@ -431,7 +431,7 @@ public class Aupk
         catch (Exception e)
         {
             e.printStackTrace();
-            Log.i("AUPK","aupkThreadClasses error");
+            Log.i("QAZWSX","qazwsxThreadClasses error");
         }
         return false;
     }
@@ -456,7 +456,7 @@ public class Aupk
         catch (Exception e)
         {
             //e.printStackTrace();
-            //Log.e("AUPK", "ActivityThread:readFileString,read config file failed:" +e.getMessage()+";fileName:"+fileName);
+            //Log.e("QAZWSX", "ActivityThread:readFileString,read config file failed:" +e.getMessage()+";fileName:"+fileName);
         }
        return null;
     }

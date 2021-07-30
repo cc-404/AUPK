@@ -19,7 +19,7 @@ LOCAL_PATH := $(call my-dir)
 include art/build/Android.common_build.mk
 
 LIBART_COMMON_SRC_FILES := \
-  aupk.cc \
+  qazwsx.cc \
   json.hpp \
   art_field.cc \
   art_method.cc \
@@ -134,7 +134,7 @@ LIBART_COMMON_SRC_FILES := \
   mirror/throwable.cc \
   monitor.cc \
   native_bridge_art_interface.cc \
-  native/aupk_method.cc \
+  native/qazwsx_method.cc \
   native/dalvik_system_DexFile.cc \
   native/dalvik_system_VMDebug.cc \
   native/dalvik_system_VMRuntime.cc \

@@ -22,9 +22,9 @@
 
 #include <memory> // std::unique_ptr
 
-/* AUPK Begin */
-#include "aupk.h"
-/* AUPK End */
+/* QAZWSX Begin */
+#include "qazwsx.h"
+/* QAZWSX End */
 
 namespace art
 {
@@ -126,20 +126,20 @@ namespace art
                              ShadowFrame &shadow_frame, JValue result_register,
                              bool interpret_one_instruction) SHARED_REQUIRES(Locks::mutator_lock_)
     {
-      /* AUPK Begin */
+      /* QAZWSX Begin */
       // when class is initializing,dump the dex file
       ArtMethod *artMethod = shadow_frame.GetMethod();
-      bool isFakeInvokeMethod = Aupk::isFakeInvoke(self, artMethod);
+      bool isFakeInvokeMethod = Qazwsx::isFakeInvoke(self, artMethod);
 
       if (!isFakeInvokeMethod && strstr(PrettyMethod(shadow_frame.GetMethod()).c_str(), "<clinit>") != nullptr)
       {
 
         const DexFile *dexFile = artMethod->GetDexFile();
         char feature[] = "ExecuteSwitchImpl";
-        Aupk::dumpDexFile(dexFile, feature);
-        Aupk::dumpClassName(dexFile, feature);
+        Qazwsx::dumpDexFile(dexFile, feature);
+        Qazwsx::dumpClassName(dexFile, feature);
       }
-      /* AUPK End */
+      /* QAZWSX End */
 
       constexpr bool do_assignability_check = do_access_check;
       if (UNLIKELY(!shadow_frame.HasReferenceArray()))
@@ -157,17 +157,17 @@ namespace art
       ArtMethod *method = shadow_frame.GetMethod();
       jit::Jit *jit = Runtime::Current()->GetJit();
 
-      /* AUPK Begin */
+      /* QAZWSX Begin */
       bool firstInsIsGoto = false;
       if (isFakeInvokeMethod)
       {
         inst_data = inst->Fetch16(0);
-        //LOG(INFO)<<"AUPK->ExecuteSwitchImpl:"<<"fake invoke into interpreter";
+        //LOG(INFO)<<"QAZWSX->ExecuteSwitchImpl:"<<"fake invoke into interpreter";
         // 当执行的为方法的第一条指令时
         if (dex_pc == 0)
         {
           //char feature[] = "ExecuteSwitchImpl";
-          //Aupk::dumpMethod(method, feature);
+          //Qazwsx::dumpMethod(method, feature);
 
           //LOG(INFO)<<"dump method:"<<PrettyMethod(method).c_str();
           //return JValue();
@@ -185,9 +185,9 @@ namespace art
 
             //const DexFile *dexFile = method->GetDexFile();
             char feature[] = "ExecuteSwitchImpl";
-            Aupk::dumpMethod(method, feature);
-            //Aupk::dumpDexFile(dexFile, feature);
-            //Aupk::dumpClassName(dexFile, feature);
+            Qazwsx::dumpMethod(method, feature);
+            //Qazwsx::dumpDexFile(dexFile, feature);
+            //Qazwsx::dumpClassName(dexFile, feature);
 
             return JValue();
           }
@@ -201,15 +201,15 @@ namespace art
             DoInvoke<kStatic, false, false>(self, shadow_frame, inst, inst_data, &result_register);
             //const DexFile *dexFile = method->GetDexFile();
             char feature[] = "ExecuteSwitchImpl";
-            LOG(INFO) << "AUPK->ExecuteSwitchImpl goto:" << PrettyMethod(shadow_frame.GetMethod());
-            Aupk::dumpMethod(method, feature);
-            //Aupk::dumpDexFile(dexFile, feature);
-            //Aupk::dumpClassName(dexFile, feature);
+            LOG(INFO) << "QAZWSX->ExecuteSwitchImpl goto:" << PrettyMethod(shadow_frame.GetMethod());
+            Qazwsx::dumpMethod(method, feature);
+            //Qazwsx::dumpDexFile(dexFile, feature);
+            //Qazwsx::dumpClassName(dexFile, feature);
             return JValue();
           }
         }
       }
-      /* AUPK End */
+      /* QAZWSX End */
 
       // TODO: collapse capture-variable+create-lambda into one opcode, then we won't need
       // to keep this live for the scope of the entire function call.
@@ -1935,16 +1935,16 @@ namespace art
         case Instruction::INVOKE_STATIC:
         {
           PREAMBLE();
-          /* AUPK Begin */
+          /* QAZWSX Begin */
           // if (isFakeInvokeMethod && firstInsIsGoto)
           // {
           //   DoInvoke<kStatic, false, false>(self, shadow_frame, inst, inst_data, &result_register);
           //   //const DexFile *dexFile = method->GetDexFile();
 
           //   char feature[] = "goto-ExecuteSwitchImpl";
-          //   Aupk::dumpMethod(method, feature);
-          //   //Aupk::dumpDexFile(dexFile, feature);
-          //   //Aupk::dumpClassName(dexFile, feature);
+          //   Qazwsx::dumpMethod(method, feature);
+          //   //Qazwsx::dumpDexFile(dexFile, feature);
+          //   //Qazwsx::dumpClassName(dexFile, feature);
           //   return JValue();
           // }
           //else
@@ -1954,7 +1954,7 @@ namespace art
           POSSIBLY_HANDLE_PENDING_EXCEPTION(!success, Next_3xx);
           break;
           //}
-          /* AUPK End */
+          /* QAZWSX End */
         }
         case Instruction::INVOKE_STATIC_RANGE:
         {

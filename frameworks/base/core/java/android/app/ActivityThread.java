@@ -148,7 +148,7 @@ import dalvik.system.VMDebug;
 import dalvik.system.VMRuntime;
 import org.apache.harmony.dalvik.ddmc.DdmVmInternal;
 
-/* AUPK Begin */
+/* QAZWSX Begin */
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.OutputStream;
@@ -168,9 +168,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Iterator;
 
-import android.app.Aupk;
+import android.app.Qazwsx;
 
-/* AUPK End */
+/* QAZWSX End */
 
 final class RemoteServiceException extends AndroidRuntimeException {
     public RemoteServiceException(String msg) {
@@ -2598,10 +2598,10 @@ public final class ActivityThread {
         try {
             Application app = r.packageInfo.makeApplication(false, mInstrumentation);
 
-            /* AUPK Begin */
-            //Log.i("AUPK", "ActivityThread:performLaunchActivity,appName:" + app.getPackageName());
-            //Log.i("AUPK", "ActivityThread:performLaunchActivity,pkg:" +r.packageInfo.getPackageName());
-            /* AUPK End */
+            /* QAZWSX Begin */
+            //Log.i("QAZWSX", "ActivityThread:performLaunchActivity,appName:" + app.getPackageName());
+            //Log.i("QAZWSX", "ActivityThread:performLaunchActivity,pkg:" +r.packageInfo.getPackageName());
+            /* QAZWSX End */
 
             if (localLOGV) Slog.v(TAG, "Performing launch of " + r);
             if (localLOGV) Slog.v(
@@ -2699,15 +2699,15 @@ public final class ActivityThread {
             }
         }
 
-         /* AUPK Begin */
+         /* QAZWSX Begin */
 
         String packageName=r.packageInfo.getPackageName();
-        Log.i("AUPK", "ActivityThread:performLaunchActivity,this packageName:" +packageName);
-        String config=Aupk.readFileString("data/local/tmp/aupk.config");
+        Log.i("QAZWSX", "ActivityThread:performLaunchActivity,this packageName:" +packageName);
+        String config=Qazwsx.readFileString("data/local/tmp/qazwsx.config");
         
         if(config!=null)
         {
-            Log.i("AUPK", "Aupk config:" +config);
+            Log.i("QAZWSX", "Qazwsx config:" +config);
             config=config.replace("\n","");
             String[] configs=config.split(" ");
             if(configs.length>0)
@@ -2715,13 +2715,13 @@ public final class ActivityThread {
                 String targetPackageName=configs[0];
                 if(packageName.equals(targetPackageName))
                 {
-                    Aupk aupk=new Aupk();
-                    aupk.aupkThread();
+                    Qazwsx qazwsx=new Qazwsx();
+                    qazwsx.qazwsxThread();
                 }  
             }           
         }      
         
-        /* AUPK End */
+        /* QAZWSX End */
         return activity;
     }
 
