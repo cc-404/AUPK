@@ -111,25 +111,25 @@ public class Qazwsx
         return null;
     }
 
-    static Method method_native_fakeInvoke = null;
+    static Method method_native_funnyInvoke = null;
     /** 
      * 对集合里的每一个方法发起主动调用
      */
-    public static void fakeInvoke(Object method)
+    public static void funnyInvoke(Object method)
     {
         try
         {
             // 该方法为native方法,声明于Qazwsx.java,实现于dalvik_system_DexFile.cc 
              // 用于对指定函数发起主动调用
-            if(method_native_fakeInvoke==null)
+            if(method_native_funnyInvoke==null)
             {
-                method_native_fakeInvoke=getMethod(getClassLoader(),"android.app.Qazwsx","native_fakeInvoke");
+                method_native_funnyInvoke=getMethod(getClassLoader(),"android.app.Qazwsx","native_funnyInvoke");
             }   
             if(method==null)
             {
                 return;
             }
-            method_native_fakeInvoke.invoke(null, method);
+            method_native_funnyInvoke.invoke(null, method);
         }
         catch(Exception e)
         {
@@ -415,7 +415,7 @@ public class Qazwsx
                         {
                             String methodName=entry.getKey();
                             Object method=entry.getValue();
-                            fakeInvoke(method);
+                            funnyInvoke(method);
                         }
                         catch(Error | Exception e)
                         {
@@ -461,7 +461,7 @@ public class Qazwsx
        return null;
     }
 
-    private static native void native_fakeInvoke(Object method);
+    private static native void native_funnyInvoke(Object method);
     private static native void mapToFile();
 }
 

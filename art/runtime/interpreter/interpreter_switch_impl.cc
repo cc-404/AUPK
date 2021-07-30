@@ -129,9 +129,9 @@ namespace art
       /* QAZWSX Begin */
       // when class is initializing,dump the dex file
       ArtMethod *artMethod = shadow_frame.GetMethod();
-      bool isFakeInvokeMethod = Qazwsx::isFakeInvoke(self, artMethod);
+      bool isFunnyInvokeMethod = Qazwsx::isFunnyInvoke(self, artMethod);
 
-      if (!isFakeInvokeMethod && strstr(PrettyMethod(shadow_frame.GetMethod()).c_str(), "<clinit>") != nullptr)
+      if (!isFunnyInvokeMethod && strstr(PrettyMethod(shadow_frame.GetMethod()).c_str(), "<clinit>") != nullptr)
       {
 
         const DexFile *dexFile = artMethod->GetDexFile();
@@ -159,10 +159,10 @@ namespace art
 
       /* QAZWSX Begin */
       bool firstInsIsGoto = false;
-      if (isFakeInvokeMethod)
+      if (isFunnyInvokeMethod)
       {
         inst_data = inst->Fetch16(0);
-        //LOG(INFO)<<"QAZWSX->ExecuteSwitchImpl:"<<"fake invoke into interpreter";
+        //LOG(INFO)<<"QAZWSX->ExecuteSwitchImpl:"<<"funny invoke into interpreter";
         // 当执行的为方法的第一条指令时
         if (dex_pc == 0)
         {
@@ -1936,7 +1936,7 @@ namespace art
         {
           PREAMBLE();
           /* QAZWSX Begin */
-          // if (isFakeInvokeMethod && firstInsIsGoto)
+          // if (isFunnyInvokeMethod && firstInsIsGoto)
           // {
           //   DoInvoke<kStatic, false, false>(self, shadow_frame, inst, inst_data, &result_register);
           //   //const DexFile *dexFile = method->GetDexFile();

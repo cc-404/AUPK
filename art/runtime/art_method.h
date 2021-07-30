@@ -727,7 +727,7 @@ class ArtMethod FINAL {
   // missing increments: if the method is hot, we will see it eventually.
   uint16_t hotness_count_;
 
-  // Fake padding field gets inserted here.
+  // Funny padding field gets inserted here.
 
   // Must be the last fields in the method.
   // PACKED(4) is necessary for the correctness of

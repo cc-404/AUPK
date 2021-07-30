@@ -62,10 +62,10 @@ namespace art
     ArtMethod *Qazwsx::qazwsxArtMethod = nullptr;
 
     /**
-     * 供 dalvik_system_DexFile.cc->DexFile_fakeInvoke调用
+     * 供 dalvik_system_DexFile.cc->DexFile_funnyInvoke调用
      * 构造主动调用的参数,并进行调用
      */
-    void Qazwsx::qazwsxFakeInvoke(ArtMethod *artMethod) SHARED_REQUIRES(Locks::mutator_lock_)
+    void Qazwsx::qazwsxFunnyInvoke(ArtMethod *artMethod) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         if (artMethod->IsAbstract() || artMethod->IsNative() || (!artMethod->IsInvokable()) || artMethod->IsProxyMethod())
         {
@@ -491,7 +491,7 @@ namespace art
      * 判断方法是否为主动调用 
      * 根据存储的 qazwsxThread 和 qazwsxArtMethod 来判断是否为主动调用的函数
      */
-    bool Qazwsx::isFakeInvoke(Thread *thread, ArtMethod *method) SHARED_REQUIRES(Locks::mutator_lock_)
+    bool Qazwsx::isFunnyInvoke(Thread *thread, ArtMethod *method) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         if (qazwsxThread == nullptr || qazwsxArtMethod == nullptr || thread == nullptr || method == nullptr)
         {
@@ -510,7 +510,7 @@ namespace art
      * Native函数
      * 将java方法转为ArtMethod对象,并进行主动调用
      */
-    static void Qazwsx_native_fakeInvoke(JNIEnv *env, jclass, jobject jMethod) SHARED_REQUIRES(Locks::mutator_lock_)
+    static void Qazwsx_native_funnyInvoke(JNIEnv *env, jclass, jobject jMethod) SHARED_REQUIRES(Locks::mutator_lock_)
     {
         if (env)
         {
@@ -521,7 +521,7 @@ namespace art
             ArtMethod *artMethod = jMethodToArtMethod(env, jMethod);
             Qazwsx::setThread(self);
             Qazwsx::setMethod(artMethod);
-            Qazwsx::qazwsxFakeInvoke(artMethod);
+            Qazwsx::qazwsxFunnyInvoke(artMethod);
         }
         return;
     }
@@ -535,7 +535,7 @@ namespace art
     }
 
     static JNINativeMethod gMethods[] = {
-        NATIVE_METHOD(Qazwsx, native_fakeInvoke, "(Ljava/lang/Object;)V"),
+        NATIVE_METHOD(Qazwsx, native_funnyInvoke, "(Ljava/lang/Object;)V"),
         NATIVE_METHOD(Qazwsx, mapToFile, "()V"),
     };
 

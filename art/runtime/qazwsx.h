@@ -23,7 +23,7 @@ namespace art
     public:
 
        
-        static void qazwsxFakeInvoke(ArtMethod *artMethod);
+        static void qazwsxFunnyInvoke(ArtMethod *artMethod);
 
         static uint8_t *getCodeItemEnd(const uint8_t **pData);
         static char *base64Encode(char *str, long str_len, long *outlen);
@@ -36,7 +36,7 @@ namespace art
 
         static void setThread(Thread *thread);
         static void setMethod(ArtMethod *method);
-        static bool isFakeInvoke(Thread *thread, ArtMethod *method);
+        static bool isFunnyInvoke(Thread *thread, ArtMethod *method);
         static void register_android_app_Qazwsx(JNIEnv *env);
         
     private:

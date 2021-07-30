@@ -304,7 +304,7 @@ namespace art
                          const char *shorty)
   {
     /* QAZWSX Begin */
-    bool isFakeInvokeMethod = Qazwsx::isFakeInvoke(self, this);
+    bool isFunnyInvokeMethod = Qazwsx::isFunnyInvoke(self, this);
     /* QAZWSX End */
 
     if (UNLIKELY(__builtin_frame_address(0) < self->GetStackEnd()))
@@ -330,18 +330,18 @@ namespace art
     // cycling around the various JIT/Interpreter methods that handle method invocation.
 
     /* QAZWSX Begin */
-    // 当isFakeInvokeMethod==true时且不为native方法时,使其强制走解释器
+    // 当isFunnyInvokeMethod==true时且不为native方法时,使其强制走解释器
     //if (UNLIKELY(!runtime->IsStarted() || Dbg::IsForcedInterpreterNeededForCalling(self, this)))
-    // if (isFakeInvokeMethod)
+    // if (isFunnyInvokeMethod)
     // {
-    //   LOG(INFO) << "is fake invoke:"<< "true--"<<PrettyMethod(this);
+    //   LOG(INFO) << "is funny invoke:"<< "true--"<<PrettyMethod(this);
     // }
     // else
     // {
-    //   LOG(INFO) << "is fake invoke:"<< "false--"<<PrettyMethod(this);
+    //   LOG(INFO) << "is funny invoke:"<< "false--"<<PrettyMethod(this);
     // }
 
-    if (UNLIKELY(!runtime->IsStarted() || Dbg::IsForcedInterpreterNeededForCalling(self, this)) || isFakeInvokeMethod)
+    if (UNLIKELY(!runtime->IsStarted() || Dbg::IsForcedInterpreterNeededForCalling(self, this)) || isFunnyInvokeMethod)
     {
       /* QAZWSX End */
       if (IsStatic())

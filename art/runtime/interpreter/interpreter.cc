@@ -56,7 +56,7 @@ namespace art
     {
       // TODO: The following enters JNI code using a typedef-ed function rather than the JNI compiler,
       //       it should be removed and JNI compiled stubs used instead.
-      LOG(INFO)<<"fakeInvoke shorty:"<<shorty;
+      LOG(INFO)<<"funnyInvoke shorty:"<<shorty;
       ScopedObjectAccessUnchecked soa(self);
       if (method->IsStatic())
       {
@@ -344,9 +344,9 @@ namespace art
         bool stay_in_interpreter = false) SHARED_REQUIRES(Locks::mutator_lock_)
     {
       // ArtMethod *artMethod = shadow_frame.GetMethod();
-      // bool isFakeInvokeMethod = Qazwsx::isFakeInvoke(self, artMethod);
+      // bool isFunnyInvokeMethod = Qazwsx::isFunnyInvoke(self, artMethod);
       
-      // if (!isFakeInvokeMethod && strstr(PrettyMethod(shadow_frame.GetMethod()).c_str(), "<clinit>") != nullptr)
+      // if (!isFunnyInvokeMethod && strstr(PrettyMethod(shadow_frame.GetMethod()).c_str(), "<clinit>") != nullptr)
       // {       
        
       //   const DexFile *dexFile = artMethod->GetDexFile();
@@ -523,7 +523,7 @@ namespace art
                                     uint32_t *args, JValue *result,
                                     bool stay_in_interpreter)
     {
-      bool isFakeInvokeMethod = Qazwsx::isFakeInvoke(self, method);
+      bool isFunnyInvokeMethod = Qazwsx::isFunnyInvoke(self, method);
     
       DCHECK_EQ(self, Thread::Current());
 
@@ -572,7 +572,7 @@ namespace art
       {
         CHECK(receiver != nullptr);
         /* QAZWSX Begin */
-        if (isFakeInvokeMethod)
+        if (isFunnyInvokeMethod)
         {
           //LOG(INFO)<<"EnterInterpreterFromInvoke1";
           shadow_frame->SetVReg(cur_reg, args[0]);
@@ -595,7 +595,7 @@ namespace art
         case 'L':
         {
           /* QAZWSX Begin */
-          if (isFakeInvokeMethod)
+          if (isFunnyInvokeMethod)
           {
             //LOG(INFO)<<"EnterInterpreterFromInvoke2";
             shadow_frame->SetVReg(cur_reg, args[arg_pos]);
